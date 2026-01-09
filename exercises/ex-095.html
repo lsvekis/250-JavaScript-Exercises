@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 095 — Exercise 95</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 3 — Working with Data</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-094.html">← Prev</a>
+      <a class="btn" href="ex-096.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 095 — Exercise 95</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 95', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> arrays, objects, JSON, algorithms</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Sortable Table — click headers to sort rows
+const box = rt.section("Sortable Table");
+const rows = [
+  { name: "Ava", score: 88 },
+  { name: "Ben", score: 72 },
+  { name: "Cam", score: 95 },
+  { name: "Dan", score: 88 }
+];
+
+let sortKey = "name";
+let dir = 1;
+
+const table = document.createElement("table");
+table.className = "output";
+table.style.width = "100%";
+table.style.borderCollapse = "collapse";
+
+function cell(text, isHeader=false){
+  const el = document.createElement(isHeader ? "th" : "td");
+  el.textContent = text;
+  el.style.padding = "6px";
+  el.style.borderBottom = "1px solid rgba(255,255,255,.12)";
+  el.style.textAlign = "left";
+  return el;
+}
+
+function render(){
+  table.innerHTML = "";
+  const thead = document.createElement("thead");
+  const trh = document.createElement("tr");
+  const hName = cell("Name" + (sortKey==="name" ? (dir===1?" ▲":" ▼") : ""), true);
+  const hScore = cell("Score" + (sortKey==="score" ? (dir===1?" ▲":" ▼") : ""), true);
+
+  hName.style.cursor = "pointer";
+  hScore.style.cursor = "pointer";
+  hName.onclick = ()=>{ sortKey="name"; dir *= -1; render(); };
+  hScore.onclick = ()=>{ sortKey="score"; dir *= -1; render(); };
+
+  trh.appendChild(hName); trh.appendChild(hScore);
+  thead.appendChild(trh);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  const sorted = [...rows].sort((a,b)=>{
+    const av=a[sortKey], bv=b[sortKey];
+    if (typeof av === "number") return (av-bv)*dir;
+    return av.localeCompare(bv)*dir;
+  });
+
+  sorted.forEach(r=>{
+    const tr = document.createElement("tr");
+    tr.appendChild(cell(r.name));
+    tr.appendChild(cell(String(r.score)));
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+}
+
+box.appendChild(table);
+render();`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-095.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>
