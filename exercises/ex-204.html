@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 204 — Exercise 204</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 5 — Async JavaScript</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-203.html">← Prev</a>
+      <a class="btn" href="ex-205.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 204 — Exercise 204</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 204', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> promises, async/await, fetch</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Keyframes — create a wobble animation and trigger it on click
+const box = rt.section("Keyframes Wobble");
+const btn = rt.el("button", { class:"btn" }, "Wobble");
+const badge = rt.el("div", { class:"card", style:{display:"inline-block", padding:"12px 16px"} }, "Click Wobble");
+
+box.appendChild(rt.el("div",{class:"row"}, btn, badge));
+
+const style = document.createElement("style");
+style.textContent = \`
+@keyframes wobble {
+  0%{ transform: rotate(0deg) scale(1); }
+  25%{ transform: rotate(-6deg) scale(1.03); }
+  50%{ transform: rotate(6deg) scale(1.03); }
+  75%{ transform: rotate(-3deg) scale(1.02); }
+  100%{ transform: rotate(0deg) scale(1); }
+}
+.wobble { animation: wobble 420ms ease; }
+\`;
+document.head.appendChild(style);
+
+function trigger(){
+  badge.classList.remove("wobble");
+  void badge.offsetWidth; // restart animation
+  badge.classList.add("wobble");
+}
+
+btn.addEventListener("click", trigger);
+badge.addEventListener("click", trigger);
+rt.println("Tip: removing + re-adding the class restarts the keyframes.");`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-204.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 236 — Exercise 236</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 6 — Advanced Patterns</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-235.html">← Prev</a>
+      <a class="btn" href="ex-237.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 236 — Exercise 236</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 236', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> classes, patterns, testing, performance</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Combobox-ish Autocomplete — filter a list and select with keyboard
+const box = rt.section("Autocomplete");
+const input = rt.el("input", { class:"input", placeholder:"Type a fruit…" });
+const list = rt.el("div", { class:"card", role:"listbox", style:{marginTop:"8px", padding:"6px"} });
+const out = rt.el("div", { class:"output" }, "Selected: (none)");
+box.appendChild(input);
+box.appendChild(list);
+box.appendChild(out);
+
+const fruits = ["Apple","Apricot","Banana","Blackberry","Blueberry","Cherry","Coconut","Grape","Grapefruit","Kiwi","Lemon","Lime","Mango","Orange","Peach","Pear","Pineapple","Plum","Raspberry","Strawberry","Watermelon"];
+
+let active = -1;
+let visible = [];
+
+function render(){
+  const q = input.value.trim().toLowerCase();
+  visible = fruits.filter(f => f.toLowerCase().includes(q)).slice(0, 8);
+  list.innerHTML = "";
+  active = -1;
+
+  visible.forEach((f,i)=>{
+    const opt = rt.el("div", { role:"option", tabindex:"-1", class:"card", style:{padding:"8px", margin:"6px 0", background:"rgba(255,255,255,.05)"} }, f);
+    opt.addEventListener("mousedown", (e)=>{ e.preventDefault(); choose(i); });
+    list.appendChild(opt);
+  });
+
+  if (!visible.length) {
+    list.appendChild(rt.el("div",{class:"small"}, "(no matches)"));
+  }
+}
+
+function highlight(idx){
+  const opts = [...list.querySelectorAll('[role="option"]')];
+  opts.forEach((el,i)=>{
+    el.style.outline = (i === idx) ? "2px solid rgba(98,168,255,.8)" : "none";
+  });
+}
+
+function choose(idx){
+  const v = visible[idx];
+  if (!v) return;
+  input.value = v;
+  out.textContent = "Selected: " + v;
+  render();
+}
+
+input.addEventListener("input", render);
+input.addEventListener("keydown", (e)=>{
+  const opts = [...list.querySelectorAll('[role="option"]')];
+  if (!opts.length) return;
+
+  if (e.key === "ArrowDown") { e.preventDefault(); active = Math.min(opts.length-1, active+1); highlight(active); }
+  if (e.key === "ArrowUp") { e.preventDefault(); active = Math.max(0, active-1); highlight(active); }
+  if (e.key === "Enter") { if (active >= 0) { e.preventDefault(); choose(active); } }
+  if (e.key === "Escape") { render(); }
+});
+
+render();`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-236.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

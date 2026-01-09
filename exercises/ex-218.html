@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 218 — Exercise 218</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 6 — Advanced Patterns</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-217.html">← Prev</a>
+      <a class="btn" href="ex-219.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 218 — Exercise 218</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 218', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> classes, patterns, testing, performance</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// ImageData — generate pixel art and scale it up (no external images)
+const box = rt.section("Pixel Art (ImageData)");
+const canvas = document.createElement("canvas");
+canvas.width = 520;
+canvas.height = 260;
+canvas.style.width = "100%";
+canvas.style.background = "rgba(255,255,255,.06)";
+canvas.style.borderRadius = "10px";
+box.appendChild(canvas);
+
+const ctx = canvas.getContext("2d");
+
+// create tiny art
+const w = 32, h = 16;
+const img = ctx.createImageData(w, h);
+
+function setPixel(x,y,r,g,b,a=255){
+  const i = (y*w + x) * 4;
+  img.data[i] = r;
+  img.data[i+1] = g;
+  img.data[i+2] = b;
+  img.data[i+3] = a;
+}
+
+for (let y=0; y<h; y++){
+  for (let x=0; x<w; x++){
+    const cx = x - w/2;
+    const cy = y - h/2;
+    const d = Math.sqrt(cx*cx + cy*cy);
+
+    // background
+    setPixel(x,y, 15, 23, 38);
+
+    // face
+    if (d < 7.2) setPixel(x,y, 255, 220, 80);
+
+    // eyes
+    if ((x===12 && y===6) || (x===20 && y===6)) setPixel(x,y, 10,10,10);
+
+    // mouth
+    if (y===10 && x>=12 && x<=20) setPixel(x,y, 10,10,10);
+    if (y===9 && (x===12 || x===20)) setPixel(x,y, 10,10,10);
+  }
+}
+
+// draw to offscreen, then scale up to main canvas
+const off = document.createElement("canvas");
+off.width = w; off.height = h;
+off.getContext("2d").putImageData(img, 0, 0);
+
+ctx.imageSmoothingEnabled = false;
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+const scale = Math.floor(Math.min(canvas.width / w, canvas.height / h));
+const drawW = w * scale;
+const drawH = h * scale;
+const ox = Math.floor((canvas.width - drawW)/2);
+const oy = Math.floor((canvas.height - drawH)/2);
+
+ctx.drawImage(off, 0, 0, w, h, ox, oy, drawW, drawH);
+
+rt.println("ImageData lets you set pixels directly, then scale up for crisp pixel art.");`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-218.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

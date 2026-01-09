@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 239 — Exercise 239</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 6 — Advanced Patterns</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-238.html">← Prev</a>
+      <a class="btn" href="ex-240.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 239 — Exercise 239</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 239', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> classes, patterns, testing, performance</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Form Persistence — save draft to localStorage and restore on load
+const box = rt.section("Draft Save (localStorage)");
+const key = "js250_draft_v1";
+
+const ta = rt.el("textarea", { class:"input", rows:"6", placeholder:"Type notes… (auto-saves)" });
+const row = rt.el("div", { class:"row" });
+const clear = rt.el("button", { class:"btn" }, "Clear Draft");
+const out = rt.el("div", { class:"small" }, "");
+row.appendChild(clear);
+row.appendChild(out);
+
+box.appendChild(ta);
+box.appendChild(row);
+
+function save(){
+  localStorage.setItem(key, ta.value);
+  out.textContent = "Saved at " + new Date().toLocaleTimeString();
+}
+function load(){
+  const v = localStorage.getItem(key);
+  if (v != null) ta.value = v;
+  out.textContent = v ? "Draft restored." : "No saved draft yet.";
+}
+
+let id = 0;
+ta.addEventListener("input", ()=>{
+  clearTimeout(id);
+  id = setTimeout(save, 300);
+});
+
+clear.addEventListener("click", ()=>{
+  localStorage.removeItem(key);
+  ta.value = "";
+  out.textContent = "Draft cleared.";
+});
+
+load();`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-239.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

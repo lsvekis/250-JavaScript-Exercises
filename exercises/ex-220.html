@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 220 — Exercise 220</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 6 — Advanced Patterns</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-219.html">← Prev</a>
+      <a class="btn" href="ex-221.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 220 — Exercise 220</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 220', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> classes, patterns, testing, performance</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Export Canvas — download a PNG from the canvas (data URL)
+const box = rt.section("Export Canvas PNG");
+const canvas = document.createElement("canvas");
+canvas.width = 520;
+canvas.height = 220;
+canvas.style.width = "100%";
+canvas.style.background = "rgba(255,255,255,.06)";
+canvas.style.borderRadius = "10px";
+box.appendChild(canvas);
+
+const ctx = canvas.getContext("2d");
+
+// draw something
+ctx.fillStyle = "rgba(98,168,255,.95)";
+ctx.fillRect(40, 40, 180, 90);
+
+ctx.fillStyle = "rgba(255,255,255,.92)";
+ctx.font = "18px system-ui";
+ctx.fillText("Export Me", 70, 95);
+
+ctx.strokeStyle = "rgba(255,255,255,.5)";
+ctx.lineWidth = 2;
+ctx.strokeRect(40, 40, 180, 90);
+
+const row = rt.el("div", { class:"row" });
+const btn = rt.el("button", { class:"btn" }, "Create PNG Link");
+const open = rt.el("a", { class:"btn", href:"#", target:"_blank", rel:"noopener" }, "Open PNG");
+open.style.pointerEvents = "none";
+open.style.opacity = "0.55";
+const out = rt.el("div", { class:"small" }, "Click 'Create PNG Link' first.");
+row.appendChild(btn);
+row.appendChild(open);
+row.appendChild(out);
+box.appendChild(row);
+
+btn.addEventListener("click", ()=>{
+  const url = canvas.toDataURL("image/png");
+  open.href = url;
+  open.style.pointerEvents = "auto";
+  open.style.opacity = "1";
+  out.textContent = "PNG data URL created. Click 'Open PNG'.";
+  rt.println("data url length:", url.length);
+});
+
+rt.println("You can also attach the data URL to a download <a> tag.");`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-220.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 160 — Exercise 160</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 4 — DOM, Events & Browser</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-159.html">← Prev</a>
+      <a class="btn" href="ex-161.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 160 — Exercise 160</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 160', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> DOM, events, storage, browser APIs</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Undo/Redo — history stack for a textarea
+const box = rt.section("Undo / Redo");
+const ta = document.createElement("textarea");
+ta.className = "input";
+ta.rows = 5;
+ta.placeholder = "Type here…";
+
+const undoBtn = rt.el("button", { class:"btn" }, "Undo");
+const redoBtn = rt.el("button", { class:"btn" }, "Redo");
+const out = rt.el("div", { class:"small" }, "");
+
+box.appendChild(rt.el("div",{class:"row"}, undoBtn, redoBtn));
+box.appendChild(ta);
+box.appendChild(out);
+
+let history = [""];
+let index = 0;
+
+function push(value){
+  // truncate redo branch
+  history = history.slice(0, index + 1);
+  history.push(value);
+  index++;
+  update();
+}
+
+function update(){
+  undoBtn.disabled = index === 0;
+  redoBtn.disabled = index === history.length - 1;
+  out.textContent = \`history: ${index}/${history.length - 1}\`;
+}
+
+let t = null;
+ta.addEventListener("input", ()=>{
+  clearTimeout(t);
+  // group typing into snapshots every 300ms
+  t = setTimeout(()=> push(ta.value), 300);
+});
+
+undoBtn.addEventListener("click", ()=>{
+  if (index === 0) return;
+  index--;
+  ta.value = history[index];
+  update();
+});
+
+redoBtn.addEventListener("click", ()=>{
+  if (index >= history.length - 1) return;
+  index++;
+  ta.value = history[index];
+  update();
+});
+
+update();
+rt.println("Type, then undo/redo using buttons (custom history).");`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-160.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

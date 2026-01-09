@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 250 — Exercise 250</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 6 — Advanced Patterns</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-249.html">← Prev</a>
+      <a class="btn" href="ex-001.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 250 — Exercise 250</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 250', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> classes, patterns, testing, performance</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Capstone: Quiz Builder — random questions, scoring, review
+const box = rt.section("Quiz Builder");
+box.appendChild(rt.el("p",{class:"small"}, "Answer questions, then see your score and review incorrect ones."));
+
+const start = rt.el("button", { class:"btn" }, "Start Quiz");
+const area = rt.el("div", { style:{marginTop:"10px"} });
+const out = rt.el("div", { class:"output" }, "");
+
+box.appendChild(start);
+box.appendChild(area);
+box.appendChild(out);
+
+const bank = [
+  { q:"Which keyword creates a block-scoped variable?", a:["var","let","function","this"], correct:1 },
+  { q:"What does JSON.parse do?", a:["Turns object to string","Turns string to object","Formats HTML","Sorts arrays"], correct:1 },
+  { q:"Which method adds to the end of an array?", a:["shift","pop","push","unshift"], correct:2 },
+  { q:"What does '=== ' check?", a:["Value only","Type only","Value + type","Truthy/falsy"], correct:2 },
+  { q:"Which API cancels a fetch?", a:["AbortController","History","Geolocation","ResizeObserver"], correct:0 },
+  { q:"What event fires when hash changes?", a:["popstate","hashchange","submit","keydown"], correct:1 },
+];
+
+let questions = [];
+let idx = 0;
+let answers = [];
+
+function pick(n){
+  const copy = bank.slice();
+  for (let i=copy.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, n);
+}
+
+function renderQuestion(){
+  area.innerHTML = "";
+  out.textContent = "";
+
+  const q = questions[idx];
+  if (!q) return;
+
+  const card = rt.el("div", { class:"card" });
+  card.appendChild(rt.el("h3", {}, \`Q${idx+1}/${questions.length}\`));
+  card.appendChild(rt.el("div", { class:"output" }, q.q));
+
+  const group = rt.el("div", { style:{marginTop:"10px"} });
+  q.a.forEach((opt, i)=>{
+    const btn = rt.el("button", { class:"btn", style:{display:"block", width:"100%", textAlign:"left", marginTop:"8px"} }, opt);
+    btn.addEventListener("click", ()=>{
+      answers[idx] = i;
+      idx++;
+      if (idx >= questions.length) finish();
+      else renderQuestion();
+    });
+    group.appendChild(btn);
+  });
+
+  card.appendChild(group);
+  area.appendChild(card);
+}
+
+function finish(){
+  area.innerHTML = "";
+  let score = 0;
+  const wrong = [];
+  questions.forEach((q,i)=>{
+    if (answers[i] === q.correct) score++;
+    else wrong.push({ q, picked: answers[i] });
+  });
+
+  out.textContent = \`Score: ${score}/${questions.length}\n\n\`;
+
+  if (!wrong.length) {
+    out.textContent += "✅ Perfect! No incorrect answers.";
+    return;
+  }
+
+  out.textContent += "Review (incorrect):\n";
+  wrong.forEach((w, i)=>{
+    out.textContent +=
+      \`\n${i+1}) ${w.q.q}\n\` +
+      \`Your answer: ${w.q.a[w.picked] ?? "(none)"}\n\` +
+      \`Correct: ${w.q.a[w.q.correct]}\n\`;
+  });
+}
+
+start.addEventListener("click", ()=>{
+  questions = pick(5);
+  idx = 0;
+  answers = Array(questions.length).fill(null);
+  renderQuestion();
+});
+
+out.textContent = "Click Start Quiz.";`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-250.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

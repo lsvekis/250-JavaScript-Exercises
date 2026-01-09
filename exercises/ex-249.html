@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 249 — Exercise 249</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 6 — Advanced Patterns</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-248.html">← Prev</a>
+      <a class="btn" href="ex-250.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 249 — Exercise 249</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 249', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> classes, patterns, testing, performance</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Capstone: Data Dashboard — filter + sort + summary stats
+const box = rt.section("Data Dashboard");
+const controls = rt.el("div", { class:"row" });
+const q = rt.el("input", { class:"input", placeholder:"Search name…" });
+const min = rt.el("input", { class:"input", type:"number", placeholder:"Min score", value:"0" });
+const sort = rt.el("select", { class:"input" },
+  rt.el("option", { value:"score_desc" }, "Score ↓"),
+  rt.el("option", { value:"score_asc" }, "Score ↑"),
+  rt.el("option", { value:"name_asc" }, "Name A→Z"),
+  rt.el("option", { value:"name_desc" }, "Name Z→A"),
+);
+controls.appendChild(q); controls.appendChild(min); controls.appendChild(sort);
+box.appendChild(controls);
+
+const out = rt.el("div", { class:"output" }, "");
+box.appendChild(out);
+
+const data = [
+  { name:"Ava", score: 92 },
+  { name:"Liam", score: 76 },
+  { name:"Noah", score: 88 },
+  { name:"Mia", score: 81 },
+  { name:"Ethan", score: 67 },
+  { name:"Sofia", score: 95 },
+  { name:"Emma", score: 73 },
+  { name:"Olivia", score: 84 },
+  { name:"Lucas", score: 90 },
+  { name:"Zoe", score: 79 },
+];
+
+function summarize(rows){
+  const n = rows.length;
+  const avg = n ? (rows.reduce((s,r)=>s+r.score,0) / n) : 0;
+  const max = n ? Math.max(...rows.map(r=>r.score)) : 0;
+  const min = n ? Math.min(...rows.map(r=>r.score)) : 0;
+  return { n, avg, max, min };
+}
+
+function render(){
+  const term = q.value.trim().toLowerCase();
+  const minScore = Number(min.value) || 0;
+  let rows = data
+    .filter(r => r.name.toLowerCase().includes(term))
+    .filter(r => r.score >= minScore);
+
+  const s = sort.value;
+  rows = rows.slice().sort((a,b)=>{
+    if (s === "score_desc") return b.score - a.score;
+    if (s === "score_asc") return a.score - b.score;
+    if (s === "name_asc") return a.name.localeCompare(b.name);
+    if (s === "name_desc") return b.name.localeCompare(a.name);
+    return 0;
+  });
+
+  const sum = summarize(rows);
+  out.textContent =
+    \`Rows: ${sum.n}\nAvg: ${sum.avg.toFixed(1)}\nMax: ${sum.max}\nMin: ${sum.min}\n\n\` +
+    rows.map(r => \`${r.name.padEnd(8)} ${r.score}\`).join("\n");
+}
+
+[q, min, sort].forEach(el => el.addEventListener("input", render));
+render();`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-249.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

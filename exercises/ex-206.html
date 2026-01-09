@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 206 — Exercise 206</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 5 — Async JavaScript</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-205.html">← Prev</a>
+      <a class="btn" href="ex-207.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 206 — Exercise 206</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 206', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> promises, async/await, fetch</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Physics-ish Motion — spring towards a target with damping
+const box = rt.section("Spring Motion");
+const stage = rt.el("div", { class:"output", style:{height:"140px", position:"relative"} });
+const dot = rt.el("div", { style:{width:"16px", height:"16px", borderRadius:"999px", background:"rgba(255,255,255,.95)", position:"absolute", top:"50%", transform:"translateY(-50%)"} });
+stage.appendChild(dot);
+box.appendChild(stage);
+
+let x = 0;
+let v = 0;
+let target = 200;
+
+stage.addEventListener("pointermove", (e)=>{
+  const r = stage.getBoundingClientRect();
+  target = e.clientX - r.left;
+});
+
+function tick(){
+  // spring constants
+  const k = 0.08;      // stiffness
+  const damp = 0.82;   // damping
+
+  const force = (target - x) * k;
+  v = (v + force) * damp;
+  x += v;
+
+  const max = stage.clientWidth - 16;
+  x = Math.max(0, Math.min(max, x));
+
+  dot.style.left = x + "px";
+  requestAnimationFrame(tick);
+}
+tick();
+rt.println("Move your pointer across the panel to change the target.");`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-206.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

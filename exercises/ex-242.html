@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 242 — Exercise 242</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 6 — Advanced Patterns</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-241.html">← Prev</a>
+      <a class="btn" href="ex-243.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 242 — Exercise 242</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 242', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> classes, patterns, testing, performance</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Capstone: Expense Tracker — totals by category + simple chart bars
+const box = rt.section("Expense Tracker");
+const form = rt.el("div", { class:"card", style:{maxWidth:"820px"} });
+
+const amount = rt.el("input", { class:"input", type:"number", step:"0.01", placeholder:"Amount (e.g. 12.50)" });
+const category = rt.el("select", { class:"input" },
+  rt.el("option", { value:"Food" }, "Food"),
+  rt.el("option", { value:"Transport" }, "Transport"),
+  rt.el("option", { value:"Bills" }, "Bills"),
+  rt.el("option", { value:"Fun" }, "Fun"),
+  rt.el("option", { value:"Other" }, "Other"),
+);
+const note = rt.el("input", { class:"input", placeholder:"Note (optional)" });
+const add = rt.el("button", { class:"btn" }, "Add Expense");
+const reset = rt.el("button", { class:"btn" }, "Reset");
+
+form.appendChild(rt.el("h3", {}, "Add Expense"));
+form.appendChild(rt.el("div",{class:"row"}, amount, category, note, add, reset));
+box.appendChild(form);
+
+const log = rt.el("div", { class:"output" }, "");
+const chart = rt.el("div", { style:{marginTop:"10px"} });
+box.appendChild(log);
+box.appendChild(chart);
+
+let items = [];
+
+function money(n){ return new Intl.NumberFormat("en-CA",{style:"currency",currency:"CAD"}).format(n); }
+
+function totals(){
+  const by = {};
+  for (const it of items){
+    by[it.cat] = (by[it.cat] || 0) + it.amount;
+  }
+  return by;
+}
+
+function render(){
+  const total = items.reduce((s,i)=> s+i.amount, 0);
+  log.textContent =
+    \`Total: ${money(total)}\n\` +
+    items.slice(0, 12).map(i => \`${i.cat.padEnd(10)} ${money(i.amount)}  ${i.note ? "— "+i.note : ""}\`).join("\n");
+
+  // chart
+  chart.innerHTML = "";
+  const by = totals();
+  const max = Math.max(1, ...Object.values(by));
+  Object.entries(by).sort((a,b)=>b[1]-a[1]).forEach(([cat, val])=>{
+    const bar = rt.el("div", { class:"card", style:{padding:"10px", marginTop:"8px"} });
+    const w = Math.round((val / max) * 100);
+    const fill = rt.el("div", { style:{height:"10px", borderRadius:"999px", background:"rgba(98,168,255,.9)", width:w+"%"} });
+    bar.appendChild(rt.el("div",{class:"small"}, \`${cat} — ${money(val)}\`));
+    bar.appendChild(rt.el("div",{style:{background:"rgba(255,255,255,.10)", borderRadius:"999px", padding:"2px"}}, fill));
+    chart.appendChild(bar);
+  });
+}
+
+add.onclick = ()=>{
+  const a = Number(amount.value);
+  if (!Number.isFinite(a) || a <= 0) { rt.println("enter a positive amount"); return; }
+  items.unshift({ amount: Math.round(a*100)/100, cat: category.value, note: note.value.trim(), at: Date.now() });
+  amount.value = ""; note.value = "";
+  render();
+};
+
+reset.onclick = ()=>{ items = []; render(); };
+
+render();
+rt.println("Tracks expenses and renders category totals as simple bars.");`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-242.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

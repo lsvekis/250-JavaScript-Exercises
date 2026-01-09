@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 202 — Exercise 202</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 5 — Async JavaScript</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-201.html">← Prev</a>
+      <a class="btn" href="ex-203.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 202 — Exercise 202</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 202', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> promises, async/await, fetch</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Easing — compare linear vs easeInOut using the same timer
+const box = rt.section("Easing Curves");
+const row = rt.el("div", { class:"row" });
+const start = rt.el("button", { class:"btn" }, "Start");
+const out = rt.el("div", { class:"small" }, "");
+row.appendChild(start);
+row.appendChild(out);
+box.appendChild(row);
+
+function makeLane(label){
+  const lane = rt.el("div", { class:"output", style:{height:"62px", position:"relative"} });
+  lane.appendChild(rt.el("div", { class:"small" }, label));
+  const dot = rt.el("div", { style:{width:"14px", height:"14px", borderRadius:"999px", background:"rgba(255,255,255,.9)", position:"absolute", left:"0px", top:"34px"} });
+  lane.appendChild(dot);
+  return { lane, dot };
+}
+
+const a = makeLane("Linear");
+const b = makeLane("EaseInOut");
+box.appendChild(a.lane);
+box.appendChild(b.lane);
+
+const easeInOut = (t)=> t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2)/2;
+
+function animate(durationMs){
+  const startT = performance.now();
+  const maxA = a.lane.clientWidth - 14;
+  const maxB = b.lane.clientWidth - 14;
+
+  function frame(t){
+    const p = Math.min(1, (t - startT) / durationMs);
+    const lin = p;
+    const eased = easeInOut(p);
+
+    a.dot.style.left = (lin * maxA) + "px";
+    b.dot.style.left = (eased * maxB) + "px";
+
+    out.textContent = \`progress=${p.toFixed(2)} | eased=${eased.toFixed(2)}\`;
+    if (p < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+
+start.addEventListener("click", ()=> animate(1200));
+rt.println("Ease changes speed over time without changing the start/end positions.");`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-202.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

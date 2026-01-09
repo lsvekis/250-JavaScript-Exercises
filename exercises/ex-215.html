@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 215 — Exercise 215</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 5 — Async JavaScript</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-214.html">← Prev</a>
+      <a class="btn" href="ex-216.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 215 — Exercise 215</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 215', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> promises, async/await, fetch</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Gravity & Bounce — drop balls that bounce off the floor
+const box = rt.section("Gravity Bounce");
+const canvas = document.createElement("canvas");
+canvas.width = 520;
+canvas.height = 260;
+canvas.style.width = "100%";
+canvas.style.background = "rgba(255,255,255,.06)";
+canvas.style.borderRadius = "10px";
+canvas.style.touchAction = "none";
+box.appendChild(canvas);
+
+const ctx = canvas.getContext("2d");
+const balls = [];
+
+function pos(e){
+  const r = canvas.getBoundingClientRect();
+  return {
+    x: (e.clientX - r.left) * (canvas.width / r.width),
+    y: (e.clientY - r.top) * (canvas.height / r.height)
+  };
+}
+
+canvas.addEventListener("pointerdown", (e)=>{
+  const p = pos(e);
+  balls.push({ x:p.x, y:p.y, vx:(Math.random()*200-100), vy:-80, r: 10 + Math.random()*10 });
+  rt.println("balls:", balls.length);
+});
+
+let last = performance.now();
+function tick(t){
+  const dt = (t - last)/1000;
+  last = t;
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  for (const b of balls){
+    b.vy += 500 * dt;
+    b.x += b.vx * dt;
+    b.y += b.vy * dt;
+
+    if (b.x < b.r) { b.x = b.r; b.vx *= -1; }
+    if (b.x > canvas.width - b.r) { b.x = canvas.width - b.r; b.vx *= -1; }
+
+    if (b.y > canvas.height - b.r) {
+      b.y = canvas.height - b.r;
+      b.vy *= -0.72;
+      b.vx *= 0.98;
+      if (Math.abs(b.vy) < 20) b.vy = 0;
+    }
+
+    ctx.beginPath();
+    ctx.fillStyle = "rgba(255,255,255,.92)";
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+    ctx.fill();
+  }
+
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+rt.println("Click to drop a ball. Watch gravity + bounce + friction.");`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-215.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

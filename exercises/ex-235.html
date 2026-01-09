@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 235 — Exercise 235</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 6 — Advanced Patterns</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-234.html">← Prev</a>
+      <a class="btn" href="ex-236.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 235 — Exercise 235</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 235', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> classes, patterns, testing, performance</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Accessible Tabs — keyboard navigation (Arrow keys) + aria-selected
+const box = rt.section("Accessible Tabs");
+const tablist = rt.el("div", { role:"tablist", class:"row" });
+
+const panels = rt.el("div", {});
+box.appendChild(tablist);
+box.appendChild(panels);
+
+const data = [
+  { id:"t1", label:"Overview", body:"This is the overview panel." },
+  { id:"t2", label:"Details", body:"This is the details panel." },
+  { id:"t3", label:"Notes", body:"This is the notes panel." },
+];
+
+const tabs = [];
+const panelEls = [];
+
+data.forEach((t, i)=>{
+  const tab = rt.el("button", {
+    class:"btn",
+    role:"tab",
+    id: t.id,
+    tabindex: i === 0 ? "0" : "-1",
+    "aria-selected": i === 0 ? "true" : "false",
+    "aria-controls": t.id + "-panel"
+  }, t.label);
+
+  const panel = rt.el("div", {
+    class:"card",
+    role:"tabpanel",
+    id: t.id + "-panel",
+    "aria-labelledby": t.id,
+    style:{marginTop:"10px", display: i === 0 ? "block" : "none"}
+  }, rt.el("div",{class:"output"}, t.body));
+
+  tablist.appendChild(tab);
+  panels.appendChild(panel);
+  tabs.push(tab);
+  panelEls.push(panel);
+});
+
+function setActive(idx){
+  tabs.forEach((t,i)=>{
+    const active = i === idx;
+    t.setAttribute("aria-selected", active ? "true" : "false");
+    t.tabIndex = active ? 0 : -1;
+    panelEls[i].style.display = active ? "block" : "none";
+  });
+  tabs[idx].focus();
+}
+
+tabs.forEach((t,i)=> t.addEventListener("click", ()=> setActive(i)));
+
+tablist.addEventListener("keydown", (e)=>{
+  const current = tabs.findIndex(t => t.getAttribute("aria-selected") === "true");
+  if (e.key === "ArrowRight") { e.preventDefault(); setActive((current + 1) % tabs.length); }
+  if (e.key === "ArrowLeft") { e.preventDefault(); setActive((current - 1 + tabs.length) % tabs.length); }
+  if (e.key === "Home") { e.preventDefault(); setActive(0); }
+  if (e.key === "End") { e.preventDefault(); setActive(tabs.length - 1); }
+});
+
+rt.println("Use ArrowLeft/ArrowRight/Home/End while focused on the tabs.");`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-235.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

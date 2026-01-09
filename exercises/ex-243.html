@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 243 — Exercise 243</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 6 — Advanced Patterns</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-242.html">← Prev</a>
+      <a class="btn" href="ex-244.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 243 — Exercise 243</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 243', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> classes, patterns, testing, performance</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Capstone: Pomodoro Timer — start/pause/reset + sound beep (optional)
+const box = rt.section("Pomodoro Timer");
+const row = rt.el("div", { class:"row" });
+const start = rt.el("button", { class:"btn" }, "Start");
+const pause = rt.el("button", { class:"btn" }, "Pause");
+const reset = rt.el("button", { class:"btn" }, "Reset");
+row.appendChild(start); row.appendChild(pause); row.appendChild(reset);
+
+const mins = rt.el("input", { class:"input", type:"number", min:"1", max:"60", value:"25" });
+const label = rt.el("div", { class:"small" }, "Minutes");
+const out = rt.el("div", { class:"output" }, "");
+box.appendChild(rt.el("div",{class:"row"}, label, mins));
+box.appendChild(row);
+box.appendChild(out);
+
+let total = Number(mins.value) * 60;
+let left = total;
+let running = false;
+let last = performance.now();
+let raf = 0;
+
+function fmt(s){
+  const m = Math.floor(s/60);
+  const r = s % 60;
+  return \`${String(m).padStart(2,"0")}:${String(r).padStart(2,"0")}\`;
+}
+
+async function beep(){
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    await ctx.resume();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 880;
+    gain.gain.value = 0.0001;
+    gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.2);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.22);
+  } catch {}
+}
+
+function render(){
+  out.textContent =
+    \`Time: ${fmt(left)}\n\` +
+    \`Status: ${running ? "running" : "paused"}\n\` +
+    \`Tip: change minutes, then Reset.\`;
+}
+
+function tick(t){
+  const dt = (t - last) / 1000;
+  last = t;
+  if (running){
+    left = Math.max(0, left - dt);
+    if (left === 0){
+      running = false;
+      beep();
+      rt.println("done!");
+    }
+  }
+  render();
+  raf = requestAnimationFrame(tick);
+}
+
+start.onclick = ()=>{ running = true; };
+pause.onclick = ()=>{ running = false; };
+reset.onclick = ()=>{
+  total = Math.max(60, Math.floor(Number(mins.value) * 60));
+  left = total;
+  running = false;
+  render();
+};
+
+mins.addEventListener("change", ()=> {
+  // don't auto-reset, but keep consistent if user resets
+  rt.println("minutes set to", mins.value);
+});
+
+render();
+requestAnimationFrame(tick);`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-243.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>

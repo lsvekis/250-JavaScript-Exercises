@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Exercise 205 — Exercise 205</title>
+  <link rel="stylesheet" href="../assets/style.css"/>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="badge"><span></span><strong>JavaScript Exercises 250 — Completed</strong></div>
+      <div class="small">Part 5 — Async JavaScript</div>
+    </div>
+    <div class="row">
+      <a class="btn" href="../index.html">🏠 Index</a>
+      <a class="btn" href="ex-204.html">← Prev</a>
+      <a class="btn" href="ex-206.html">Next →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <h1>Exercise 205 — Exercise 205</h1>
+    <p class="small"><strong>Goal:</strong> Run a completed working demo for 'Exercise 205', then modify/extend it.</p>
+    <p class="small"><strong>Concepts:</strong> promises, async/await, fetch</p>
+
+    <hr/>
+
+    <h2>Tasks</h2>
+    <ol><li>Open the exercise and verify output appears below.</li>
+<li>Read the code and identify the key technique used.</li>
+<li>Change an input value and re-run to see output change.</li></ol>
+
+    <h2>Bonus</h2>
+    <ul><li>Add one extra test case (input) and log it.</li>
+<li>Refactor one block into a helper function.</li></ul>
+
+    <h2>Common Bugs</h2>
+    <ul><li>Using == instead of === unintentionally.</li>
+<li>Mutating arrays/objects when you meant to copy them.</li>
+<li>Off-by-one loop/index mistakes.</li></ul>
+
+    <h2>Expected Output</h2>
+    <pre class="output">✅ Output shows in the page output panel and in the browser console.</pre>
+
+    <hr/>
+
+    <h2>Completed Code</h2>
+    <pre><code id="code"></code></pre>
+
+    <div class="row">
+      <button class="btn" id="runBtn">▶ Run</button>
+      <button class="btn" id="clearBtn">🧹 Clear Output</button>
+    </div>
+
+    <div id="app" class="card" style="margin-top:14px;background:rgba(255,255,255,.03)"></div>
+    <pre class="output" id="out"></pre>
+  </section>
+</main>
+
+<script src="../assets/runtime.js"></script>
+<script>
+const CODE = `// Sprite Animation — step through frames using background-position
+const box = rt.section("Sprite Stepper");
+box.appendChild(rt.el("p",{class:"small"}, "No image needed: we fake a sprite sheet with gradients."));
+
+const sprite = rt.el("div", { style:{
+  width:"140px", height:"70px", borderRadius:"12px",
+  backgroundImage:"linear-gradient(90deg, rgba(98,168,255,.95) 0 25%, rgba(255,255,255,.95) 25% 50%, rgba(98,168,255,.55) 50% 75%, rgba(255,255,255,.55) 75% 100%)",
+  backgroundSize:"400% 100%",
+  backgroundPosition:"0% 0%",
+  boxShadow:"0 10px 30px rgba(0,0,0,.35)"
+}});
+const btn = rt.el("button", { class:"btn" }, "Play");
+const out = rt.el("div", { class:"small" }, "");
+box.appendChild(rt.el("div",{class:"row"}, btn, out));
+box.appendChild(sprite);
+
+let playing = false;
+let frame = 0;
+let raf = 0;
+
+function loop(){
+  frame = (frame + 1) % 4;
+  const pos = (frame * 100) / 3; // 0, 33.33, 66.66, 100
+  sprite.style.backgroundPosition = \`${pos}% 0%\`;
+  out.textContent = "frame " + (frame + 1) + "/4";
+  raf = requestAnimationFrame(loop);
+}
+
+btn.addEventListener("click", ()=>{
+  playing = !playing;
+  btn.textContent = playing ? "Stop" : "Play";
+  if (playing) loop();
+  else cancelAnimationFrame(raf);
+});`;
+document.getElementById("code").textContent = CODE;
+</script>
+<script src="../solutions/ex-205.js"></script>
+<script>
+const outEl = document.getElementById("out");
+const appEl = document.getElementById("app");
+const rt = window.Runtime.bindRuntime(appEl, outEl);
+
+function clearAll() { rt.clear(); }
+
+async function run() {
+  clearAll();
+  try {
+    const result = window.exercise(rt);
+    if(result && typeof result.then === "function") await result;
+  } catch (err) {
+    rt.println("Error:", err && err.message ? err.message : err);
+    console.error(err);
+  }
+}
+
+document.getElementById("runBtn").addEventListener("click", run);
+document.getElementById("clearBtn").addEventListener("click", clearAll);
+run();
+</script>
+</body>
+</html>
